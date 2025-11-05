@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Main Menu - Komodo Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .menu { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 20px; }
+        .menu-item { padding: 15px; background: #f0f0f0; text-align: center; text-decoration: none; color: #333; }
+        .menu-item:hover { background: #e0e0e0; }
+        .flash { padding: 10px; margin: 10px 0; background: #f0f0f0; }
+    </style>
+</head>
+<body>
+    <h1>Welcome {{ username }} ({{ user_type }})</h1>
+    <a href="{{ url_for('logout') }}">Logout</a>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="menu">
+        <a href="{{ url_for('create_organization') }}" class="menu-item">1. Create organization</a>
+        <a href="{{ url_for('join_organization') }}" class="menu-item">2. Join organization</a>
+        <a href="{{ url_for('create_class') }}" class="menu-item">3. Create course</a>
+        <a href="{{ url_for('enroll_class') }}" class="menu-item">4. Enroll in course</a>
+        <a href="{{ url_for('create_program') }}" class="menu-item">5. Create program</a>
+        <a href="{{ url_for('enroll_program') }}" class="menu-item">6. Enroll in program</a>
+        <a href="{{ url_for('create_activity') }}" class="menu-item">7. Create activity</a>
+        <a href="{{ url_for('upload_content') }}" class="menu-item">8. Upload content</a>
+        <a href="{{ url_for('report_sighting') }}" class="menu-item">9. Report species sighting</a>
+        <a href="{{ url_for('submit_assignment') }}" class="menu-item">10. Submit assignment</a>
+        <a href="{{ url_for('grade_submission') }}" class="menu-item">11. Grade submission</a>
+        <a href="{{ url_for('send_message') }}" class="menu-item">12. Send message</a>
+        <a href="{{ url_for('save_canvas') }}" class="menu-item">13. Save creative canvas</a>
+        <a href="{{ url_for('record_analytics') }}" class="menu-item">14. Record analytics</a>
+    </div>
+</body>
+</html>

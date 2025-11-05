@@ -1,0 +1,8 @@
+CUC06 T4 Linear algebra 3
+CUC07 T2 Partial differential equation 2
+CUC10 T2 Calculus 6
+CUC11 T4 Fintech 3
+CUC12 T5 Accounting 3
+CUC13 T1 Economy 3
+CUC95 T1 basic principle of Marxism 2
+CUC94 T1 plutonomy 2

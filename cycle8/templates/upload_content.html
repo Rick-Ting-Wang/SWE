@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload Content - Komodo Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .flash { padding: 10px; margin: 10px 0; background: #f0f0f0; }
+        .back { margin-top: 10px; display: inline-block; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Upload Content</h1>
+    <a href="{{ url_for('main_menu') }}" class="back">← Back to menu</a>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+        <div class="form-group">
+            <label>Title:</label>
+            <input type="text" name="title" required>
+        </div>
+        <div class="form-group">
+            <label>Content type:</label>
+            <select name="content_type" required>
+                {% for type in content_types %}
+                <option value="{{ type }}">{{ type }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Content:</label>
+            <textarea name="content" rows="6" required></textarea>
+        </div>
+        <div class="form-group">
+            <label>Associated Organization (optional):</label>
+            <select name="org_id">
+                <option value="">-- No organization --</option>
+                {% for org in organizations %}
+                <option value="{{ org.org_id }}">{{ org.org_name }} (ID: {{ org.org_id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>
+                <input type="checkbox" name="is_public" checked> Make public
+            </label>
+        </div>
+        <button type="submit">Upload Content</button>
+    </form>
+</body>
+</html>

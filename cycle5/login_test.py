@@ -1,0 +1,99 @@
+import mysql.connector
+
+# Connect to database
+db = mysql.connector.connect(
+    host="localhost",
+    user="root",
+    password="mysql",
+    database="komodo"
+)
+cursor = db.cursor(dictionary=True)
+
+def login():
+    username = input("Username: ")
+    password = input("Password: ")
+
+    # Authenticate user
+    cursor.execute("SELECT * FROM users WHERE username=%s AND password=%s", (username, password))
+    user = cursor.fetchone()
+    if not user:
+        print("Incorrect username or password!")
+        return
+
+    print(f"\n=== Login successful: {user['username']} ===")
+    print_user_info(user)
+
+def print_user_info(user):
+    user_id = user['user_id']
+
+    # Print user basic information
+    print("\n--- Basic Information ---")
+    for key, value in user.items():
+        print(f"{key}: {value}")
+
+    # Print user profile
+    cursor.execute("SELECT * FROM user_profiles WHERE user_id=%s", (user_id,))
+    profile = cursor.fetchone()
+    if profile:
+        print("\n--- Profile ---")
+        for key, value in profile.items():
+            print(f"{key}: {value}")
+
+    # Print organizations and roles
+    cursor.execute("""
+        SELECT o.org_name, o.org_type, om.role
+        FROM organization_members om
+        JOIN organizations o ON om.org_id = o.org_id
+        WHERE om.user_id=%s
+    """, (user_id,))
+    orgs = cursor.fetchall()
+    if orgs:
+        print("\n--- Organizations ---")
+        for org in orgs:
+            print(f"{org['org_type']} - {org['org_name']} ({org['role']})")
+
+    # Print enrolled classes
+    cursor.execute("""
+        SELECT c.class_name, c.syllabus, c.teacher_id
+        FROM class_enrollments ce
+        JOIN classes c ON ce.class_id = c.class_id
+        WHERE ce.student_id=%s
+    """, (user_id,))
+    classes = cursor.fetchall()
+    if classes:
+        print("\n--- Enrolled Classes ---")
+        for c in classes:
+            print(f"{c['class_name']}, Teacher ID: {c['teacher_id']}, Syllabus: {c['syllabus']}")
+
+    # Print enrolled programs
+    cursor.execute("""
+        SELECT p.program_name, p.program_type, pe.status
+        FROM program_enrollments pe
+        JOIN programs p ON pe.program_id = p.program_id
+        WHERE pe.user_id=%s
+    """, (user_id,))
+    programs = cursor.fetchall()
+    if programs:
+        print("\n--- Enrolled Programs ---")
+        for p in programs:
+            print(f"{p['program_name']} ({p['program_type']}), Status: {p['status']}")
+
+    # Print messages
+    cursor.execute("""
+        SELECT m.sender_id, m.recipient_id, m.message_text, m.sent_at
+        FROM messages m
+        WHERE m.sender_id=%s OR m.recipient_id=%s
+        ORDER BY m.sent_at
+    """, (user_id, user_id))
+    messages = cursor.fetchall()
+    if messages:
+        print("\n--- Messages ---")
+        for msg in messages:
+            sender = msg['sender_id']
+            recipient = msg['recipient_id']
+            print(f"From {sender} -> To {recipient}: {msg['message_text']} ({msg['sent_at']})")
+
+if __name__ == "__main__":
+    login()
+    cursor.close()
+    db.close()

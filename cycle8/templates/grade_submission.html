@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Grade Submission - Komodo Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        select, textarea, input { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .flash { padding: 10px; margin: 10px 0; background: #f0f0f0; }
+        .back { margin-top: 10px; display: inline-block; color: #333; }
+        .submission { margin: 20px 0; padding: 15px; background: #f9f9f9; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Grade Submission</h1>
+    <a href="{{ url_for('main_menu') }}" class="back">← Back to menu</a>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if submissions %}
+    <form method="post">
+        <div class="form-group">
+            <label>Select Submission to Grade:</label>
+            <select name="submission_id" required>
+                {% for sub in submissions %}
+                <option value="{{ sub.submission_id }}">
+                    Submission #{{ sub.submission_id }} - {{ sub.activity_name }} (Student: {{ sub.username }})
+                </option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Grade (A/90):</label>
+            <input type="text" name="grade" required>
+        </div>
+        <div class="form-group">
+            <label>Feedback:</label>
+            <textarea name="feedback" rows="4" required></textarea>
+        </div>
+        <button type="submit">Submit Grade</button>
+    </form>
+
+    <h3>Submission Details:</h3>
+    {% for sub in submissions %}
+    <div class="submission">
+        <p><strong>Submission ID:</strong> {{ sub.submission_id }}</p>
+        <p><strong>Activity:</strong> {{ sub.activity_name }} (ID: {{ sub.activity_id }})</p>
+        <p><strong>Student:</strong> {{ sub.username }} (ID: {{ sub.student_id }})</p>
+        <p><strong>Content:</strong> {{ sub.submission_data }}</p>
+    </div>
+    {% endfor %}
+    {% else %}
+    <p>No submissions to grade at this time.</p>
+    {% endif %}
+</body>
+</html>

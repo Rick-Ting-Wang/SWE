@@ -1,0 +1,102 @@
+# User Stories for Komodo Hub Based on Study Case
+
+**Author:** Brain Boyang Ma (14548822)  
+**Supervised by:** Rick Ting Wang (14553505)
+
+## From Interview 01: Bintang Akbar – Teacher at Ujung Raya Primary School
+
+1. **As a teacher**, I want to integrate Komodo Hub into my class syllabus and activities, so that students can access learning materials and participate in conservation programs.  
+   *Reference: "the plan is to integrate Komodo Hub into our class syllabus and activities." (Page 3)*
+
+2. **As a teacher**, I want to easily select and customize content and activities from Komodo Hub for my class, so that I can efficiently manage my teaching materials.  
+   *Reference: "if I can just pick what I want to have in my class, add some information, and publish it for my students to access, that will be good." (Page 4)*
+
+3. **As a teacher**, I want to assess my students' progress in the program, so that I can evaluate the effectiveness of the resources and structure.  
+   *Reference: "part of my job is to assess the students to examine their progress in the program." (Page 4)*
+
+4. **As a teacher**, I want to communicate with my students through emails, messages, and notes, so that I can provide feedback, instructions, and encouragement.  
+   *Reference: "I need to communicate with my students about their work... Emails will be a more formal way; and if I want a more responsive method, I should be able to directly message my students. I also want to be able to leave notes on the children’s work." (Page 4)*
+
+5. **As a teacher**, I want students to have personalized digital accounts with controlled content, so that they feel unique and engaged while remaining safe.  
+   *Reference: "each student needs to have her own digital account that they can personalize to some extent... The digital library they use should be curated carefully." (Page 4)*
+
+6. **As a teacher**, I want students' work to be compiled in a school library that is accessible to others but protects student privacy, so that everyone can learn from it without exposing sensitive data.  
+   *Reference: "Their work then should be compiled in the school’s library which everyone can have a look at and learn from. Be mindful, however, that we do not want the app to disclose students’ personal information." (Page 5)*
+
+## From Interview 02: Khairunnisa – Principal at Ujung Raya Primary School
+
+7. **As a principal**, I want my school to subscribe to Komodo Hub to access full functionalities, so that we can customize our involvement in the initiative.  
+   *Reference: "for our school to have a unique profile and to be able to customise our involvement in the initiative, we need to have an account." (Page 5)*
+
+8. **As a principal**, I want the school's library to be public but students' profiles to be private, so that we can share contributions without compromising safety.  
+   *Reference: "only the school’s profile and library will be available to the public. I mean, we certainly do not want strangers to be able to see the profiles of our students." (Page 5)*
+
+9. **As a principal**, I want a feature to generate unique access codes for students, so that teachers can manage student access internally without public exposure.  
+   *Reference: "If the app can then give us a feature to generate and distribute a unique access code for our students to access the app, that would be perfect." (Page 5)*
+
+10. **As a principal**, I want internal communication tools only for school management, teachers, and students, so that we maintain privacy and use existing platforms for external communication.  
+    *Reference: "Internally, we expect the app to allow direct communication between the school management team, teachers, and students only. We already have another digital platform to communicate with parents and our external stakeholders." (Page 6)*
+
+11. **As a principal**, I want strict access controls where only assigned teachers can access student data and higher management can retrieve all data, so that we comply with data privacy regulations.  
+    *Reference: "only the assigned teacher of a class has access to student data enrolled in a program, and only the higher-level management can retrieve data of teachers and students." (Page 6)*
+
+## From Interview 03: Ayu Lestari – School Admin at Ujung Raya Primary School
+
+12. **As a school admin**, I want to manage the school's subscription, account registration, and enrollment for Komodo Hub, so that I can support the initiative efficiently.  
+    *Reference: "I will be dealing with the subscription, account registration, enrollment, and similar things related to the app." (Page 6)*
+
+## From Interview 04: Asnawi – Account Development at Yayasan Komodo
+
+13. **As a system administrator**, I want to manage accounts for schools and communities, so that I can onboard them into Komodo Hub.  
+    *Reference: "I will be managing accounts, registering schools, registering communities." (Page 7)*
+
+14. **As a system administrator**, I want to engage with schools and communities through email, so that I can answer questions and provide support.  
+    *Reference: "engaging with schools and communities through email." (Page 7)*
+
+15. **As a system administrator**, I want to generate a business dashboard for stakeholders, so that I can present key metrics and insights.  
+    *Reference: "generating a business dashboard to be presented to stakeholders." (Page 7)*
+
+## From Interview 05: Tegar Prayudi – Project Director at Komodo Hub Initiative
+
+16. **As a project director**, I want Komodo Hub to be designed with usability principles (easy to learn, efficient, error-tolerant), so that it can be used by a wide range of users.  
+    *Reference: "our digital tools are designed following widely adopted usability principles, for instance, easy to learn, efficient, and error-tolerant." (Page 9)*
+
+17. **As a project director**, I want Komodo Hub to have intuitive navigation and minimal clicks, so that users can complete tasks efficiently.  
+    *Reference: "Users should be able to navigate through each activity intuitively and complete tasks efficiently, say with only a minimum number of clicks or touches." (Page 9)*
+
+18. **As a project director**, I want Komodo Hub to handle errors gracefully with clear instructions and backtracking options, so that users can recover from mistakes easily.  
+    *Reference: "Komodo Hub should be designed to treat errors... users should be presented with the ability to backtrack and undo or reverse actions." (Page 9)*
+
+19. **As a project director**, I want Komodo Hub to have pleasant visual design and themes, so that it is engaging for children and users.  
+    *Reference: "the visual presentation... should be the first to capture the user’s immediate reaction." (Page 9)*
+
+20. **As a project director**, I want teachers to be able to create custom activities and syllabi, so that the program can be flexibly integrated into school curricula.  
+    *Reference: "Teachers, especially, should be able to further develop a class syllabus by creating a series of in-class and outdoor activities for students." (Page 9)*
+
+21. **As a project director**, I want Komodo Hub to provide a creative canvas for users to self-evaluate, so that they can showcase their achievements.  
+    *Reference: "Komodo Hub should also provide an open-ended experience for all users to self-evaluate their contributions... by creating a creative canvas." (Page 10)*
+
+22. **As a project director**, I want Komodo Hub to run on a scalable platform that requires no infrastructure management, so that it can grow with user demand sustainably.  
+    *Reference: "Komodo Hub will need an infrastructure with a high level of scalability... The platform should allow us to develop and manage our own digital apps without having to worry about any issues of incompatibility." (Page 10)*
+
+23. **As a project director**, I want Komodo Hub to have strong security measures for data protection, so that we can safeguard children's data.  
+    *Reference: "system security is a very serious matter for Komodo Hub, especially related to data protection as we handle children’s data." (Page 10)*
+
+24. **As a project director**, I want to access a business dashboard with data on subscriptions, user behavior, and service popularity, so that I can make strategic decisions for future improvements.  
+    *Reference: "I will need to access Komodo Hub’s business dashboard and retrieve data about subscriptions, user behaviour... which services are popular." (Page 10-11)*
+
+## From Interview 06: Besoeki Rachmat – Chairman at #SaveOurAnimals Community
+
+25. **As a community chairman**, I want my community to have access to Komodo Hub programs, so that we can contribute to conservation efforts through articles, essays, and reports.  
+    *Reference: "I would expect Komodo Hub to give us access to the programs and let us contribute through articles, essays, or columns about Indonesian endangered species and conservation." (Page 11)*
+
+26. **As a community chairman**, I want Komodo Hub to provide a library page for the community and profile pages for members, so that the public can see and appreciate our contributions.  
+    *Reference: "Komodo Hub can provide us with our own library page, as well as profile and contribution pages for our members." (Page 11)*
+
+## From Interview 07: Bhaskara – Digital Security Compliance at Komodo Hub Initiative
+
+27. **As a security compliance officer**, I want Komodo Hub to implement end-to-end security measures (front-end to back-end), so that we protect sensitive data like children's information.  
+    *Reference: "Komodo Hub’s security measures should be implemented following a point-to-point approach, starting from the front end... all the way to the backend." (Page 12)*
+
+28. **As a security compliance officer**, I want Komodo Hub to comply with high security standards for data protection, encryption, and authentication, so that we minimize risks before launch.  
+    *Reference: "Komodo Hub must apply the highest security measures possible from top to bottom... We will go the full length if necessary." (Page 12)*
