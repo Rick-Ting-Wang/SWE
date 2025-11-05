@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Course - Komodo Platform</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        .form-group { margin-bottom: 15px; }
+        label { display: block; margin-bottom: 5px; }
+        input, select, textarea { width: 100%; padding: 8px; box-sizing: border-box; }
+        button { padding: 10px 15px; background: #4CAF50; color: white; border: none; cursor: pointer; }
+        .flash { padding: 10px; margin: 10px 0; background: #f0f0f0; }
+        .back { margin-top: 10px; display: inline-block; color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Create Course</h1>
+    <a href="{{ url_for('main_menu') }}" class="back">← Back to menu</a>
+
+    {% with messages = get_flashed_messages() %}
+      {% if messages %}
+        {% for message in messages %}
+          <div class="flash">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="post">
+        <div class="form-group">
+            <label>School Organization:</label>
+            <select name="org_id" required>
+                {% for org in organizations %}
+                <option value="{{ org.org_id }}">{{ org.org_name }} (ID: {{ org.org_id }})</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Course name:</label>
+            <input type="text" name="name" required>
+        </div>
+        <div class="form-group">
+            <label>Course syllabus:</label>
+            <textarea name="syllabus" rows="5" required></textarea>
+        </div>
+        <button type="submit">Create Course</button>
+    </form>
+</body>
+</html>

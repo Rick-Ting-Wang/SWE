@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register - Komodo Hub</title>
+
+    <!-- UnoCSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uno.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uno-components.css') }}">
+</head>
+<body class="h-full bg-gradient-to-br from-conservation-50 via-earth-50 to-komodo-50 font-sans antialiased">
+    <!-- Page Container -->
+    <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+        <!-- Header Section -->
+        <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-conservation-600 rounded-full mb-4">
+                <span class="text-2xl">🦎</span>
+            </div>
+            <h1 class="text-3xl font-bold text-conservation-800 mb-2">
+                Create Account
+            </h1>
+            <p class="text-gray-600">
+                Join Komodo Hub conservation community
+            </p>
+        </div>
+
+        <!-- Registration Form Container -->
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+            <div class="bg-white py-8 px-6 shadow-lg rounded-lg sm:px-10 border border-gray-200">
+
+                <!-- Flash Messages -->
+                {% with messages = get_flashed_messages() %}
+                    {% if messages %}
+                        <div class="mb-6 space-y-2">
+                            {% for message in messages %}
+                                <div class="p-3 rounded-md text-sm border-l-4
+                                    {% if 'success' in message.lower() %}bg-green-50 text-green-800 border-green-500
+                                    {% elif 'error' in message.lower() or 'invalid' in message.lower() %}bg-red-50 text-red-800 border-red-500
+                                    {% else %}bg-blue-50 text-blue-800 border-blue-500
+                                    {% endif %} animate-fade-in">
+                                    {{ message }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endwith %}
+
+                <!-- Registration Form -->
+                <form method="post" class="space-y-6">
+                    <!-- Username Field -->
+                    <div>
+                        <label for="username" class="block text-sm font-medium text-gray-700 mb-2">
+                            Username
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" id="username-icon-group">
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                    </svg>
+                                    <span class="ml-4 text-gray-400 text-sm">Choose username</span>
+                                </div>
+                            </div>
+                            <input
+                                type="text"
+                                name="username"
+                                id="username"
+                                required
+                                class="block w-full pl-32 pr-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5"
+                                placeholder=""
+                                onfocus="hideIconGroup('username-icon-group')"
+                                onblur="showIconGroup('username-icon-group', this.value)"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Email Field -->
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
+                            Email Address
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" id="email-icon-group">
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                                    </svg>
+                                    <span class="ml-4 text-gray-400 text-sm">Enter email address</span>
+                                </div>
+                            </div>
+                            <input
+                                type="email"
+                                name="email"
+                                id="email"
+                                required
+                                class="block w-full pl-32 pr-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5"
+                                placeholder=""
+                                onfocus="hideIconGroup('email-icon-group')"
+                                onblur="showIconGroup('email-icon-group', this.value)"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Password Field -->
+                    <div>
+                        <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
+                            Password
+                        </label>
+                        <div class="relative">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none" id="password-icon-group">
+                                <div class="flex items-center">
+                                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                    </svg>
+                                    <span class="ml-4 text-gray-400 text-sm">Create password</span>
+                                </div>
+                            </div>
+                            <input
+                                type="password"
+                                name="password"
+                                id="password"
+                                required
+                                class="block w-full pl-32 pr-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5"
+                                placeholder=""
+                                onfocus="hideIconGroup('password-icon-group')"
+                                onblur="showIconGroup('password-icon-group', this.value)"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- User Type Field -->
+                    <div>
+                        <label for="user_type" class="block text-sm font-medium text-gray-700 mb-2">
+                            User Type
+                        </label>
+                        <select
+                            name="user_type"
+                            id="user_type"
+                            required
+                            class="block w-full pl-32 pr-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200">
+                            {% for type in user_types %}
+                            <option value="{{ type }}" {{ 'selected' if loop.first else '' }}>{{ type }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <!-- Avatar Field -->
+                    <div>
+                        <label for="avatar" class="block text-sm font-medium text-gray-700 mb-2">
+                            Avatar (1-9)
+                        </label>
+                        <div class="flex items-center space-x-6">
+                            <div class="flex items-center space-x-3">
+                                <input
+                                    type="number"
+                                    name="avatar"
+                                    id="avatar"
+                                    min="1"
+                                    max="9"
+                                    value="1"
+                                    class="block w-20 px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 text-center"
+                                >
+                                <span class="text-sm text-gray-500">Preview:</span>
+                            </div>
+                            <div class="flex items-center justify-center w-16 h-16 bg-gradient-to-br from-conservation-100 to-earth-100 rounded-full border-3 border-white shadow-lg"
+                                 id="avatar-container">
+                                <img src="{{ url_for('static', filename='avatar/1.jpg') }}"
+                                     alt="Avatar"
+                                     class="w-12 h-12 rounded-full object-cover border-2 border-conservation-200 transition-all duration-200 hover:scale-105"
+                                     id="avatar-preview">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div class="pt-4">
+                        <button
+                            type="submit"
+                            class="w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-conservation-600 hover:bg-conservation-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-conservation-500 transition-all duration-200 transform hover:scale-105"
+                        >
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                            </svg>
+                            Create Account
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Login Link -->
+                <div class="mt-6 text-center">
+                    <p class="text-sm text-gray-600">
+                        Already have an account?
+                        <a href="{{ url_for('login') }}" class="font-medium text-conservation-600 hover:text-conservation-500 transition-colors duration-200">
+                            Sign in here
+                        </a>
+                    </p>
+                </div>
+
+                <!-- Additional Help -->
+                <div class="mt-6 text-center">
+                    <p class="text-xs text-gray-500">
+                        By creating an account, you join our mission of protecting Indonesia's wildlife through education and community engagement.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer Links -->
+        <div class="mt-8 text-center">
+            <div class="inline-flex items-center space-x-4 text-sm text-gray-500">
+                <span>🌿 Conservation Education</span>
+                <span>•</span>
+                <span>🦎 Wildlife Protection</span>
+                <span>•</span>
+                <span>📚 Community Learning</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-32 w-80 h-80 bg-conservation-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-32 w-80 h-80 bg-earth-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse animation-delay-2000"></div>
+    </div>
+
+    <!-- JavaScript for avatar preview -->
+    <script>
+        document.getElementById('avatar').addEventListener('change', function() {
+            const avatarNum = this.value;
+            const preview = document.getElementById('avatar-preview');
+            if (avatarNum >= 1 && avatarNum <= 9) {
+                preview.src = '{{ url_for("static", filename="avatar/") }}' + avatarNum + '.jpg';
+            }
+        });
+
+        // Function to hide icon group when input is focused
+        function hideIconGroup(groupId) {
+            const iconGroup = document.getElementById(groupId);
+            if (iconGroup) {
+                iconGroup.style.opacity = '0';
+                iconGroup.style.transition = 'opacity 0.2s ease-in-out';
+            }
+        }
+
+        // Function to show icon group when input loses focus and is empty
+        function showIconGroup(groupId, inputValue) {
+            const iconGroup = document.getElementById(groupId);
+            if (iconGroup && !inputValue.trim()) {
+                iconGroup.style.opacity = '1';
+            }
+        }
+    </script>
+</body>
+</html>

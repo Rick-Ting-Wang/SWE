@@ -1,0 +1,32 @@
+{
+  "name": "komodo-hub-frontend",
+  "version": "1.0.0",
+  "description": "Komodo Hub frontend with UnoCSS",
+  "main": "index.js",
+  "scripts": {
+    "dev": "unocss \"templates/**/*.html\" --watch --out-file static/css/uno.css",
+    "build": "unocss \"templates/**/*.html\" --minify --out-file static/css/uno.css",
+    "build:prod": "unocss \"templates/**/*.html\" --minify --out-file static/css/uno.min.css",
+    "preview": "python app.py",
+    "clean": "rm -f static/css/uno.css static/css/uno.min.css"
+  },
+  "keywords": [
+    "flask",
+    "unocss",
+    "conservation",
+    "education"
+  ],
+  "author": "Komodo Hub Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@unocss/cli": "^0.58.0",
+    "@unocss/preset-attributify": "^0.58.0",
+    "@unocss/preset-icons": "^0.58.0",
+    "@unocss/preset-typography": "^0.58.0",
+    "@unocss/preset-web-fonts": "^0.58.0",
+    "unocss": "^0.58.0"
+  },
+  "dependencies": {
+    "@iconify/json": "^2.2.0"
+  }
+}

@@ -1,0 +1,249 @@
+/**************************************************
+ * Komodo Hub - Unified Form Spacing System
+ *
+ * This file contains standardized CSS utility classes
+ * for consistent form element spacing across all templates.
+ *
+ * Usage Guidelines:
+ * - Use these classes instead of inline styles
+ * - Follow the established spacing patterns
+ * - Maintain consistency across all form elements
+ **************************************************/
+
+/**************************************************
+ * FORM INPUT FIELD STANDARDS
+ **************************************************/
+
+/* Standard input field with icon + helper text */
+.form-input-icon-text {
+    @apply block w-full pl-32 pr-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5;
+}
+
+/* Input field with icon only (no helper text) */
+.form-input-icon-only {
+    @apply block w-full pl-24 pr-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5;
+}
+
+/* Standard input field without icons */
+.form-input-standard {
+    @apply block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5;
+}
+
+/* Textarea fields */
+.form-textarea {
+    @apply block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 resize-vertical leading-5;
+}
+
+/* Select dropdown fields */
+.form-select {
+    @apply block w-full pl-32 pr-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5;
+}
+
+/* Select dropdown without icons */
+.form-select-standard {
+    @apply block w-full px-4 py-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-conservation-500 focus:border-conservation-500 transition-colors duration-200 leading-5;
+}
+
+/**************************************************
+ * FORM LABEL STANDARDS
+ **************************************************/
+
+/* Standard form label */
+.form-label {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+/* Required field indicator */
+.form-label-required {
+    @apply block text-sm font-medium text-gray-700 mb-2;
+}
+
+.form-label-required::after {
+    content: ' *';
+    @apply text-red-500;
+}
+
+/**************************************************
+ * FORM GROUP STANDARDS
+ **************************************************/
+
+/* Form field container */
+.form-group {
+    @apply space-y-6;
+}
+
+/* Individual form field wrapper */
+.form-field {
+    @apply space-y-2;
+}
+
+/* Form field with helper text */
+.form-field-with-help {
+    @apply space-y-2;
+}
+
+/* Helper text styling */
+.form-help-text {
+    @apply mt-2 text-sm text-gray-500;
+}
+
+/**************************************************
+ * ICON POSITIONING STANDARDS
+ **************************************************/
+
+/* Icon group container (icon + helper text) */
+.form-icon-group {
+    @apply absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none;
+}
+
+/* Icon only container */
+.form-icon-only {
+    @apply absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none;
+}
+
+/* Icon styling */
+.form-icon {
+    @apply h-5 w-5 text-gray-400;
+}
+
+/* Helper text next to icon */
+.form-icon-text {
+    @apply ml-4 text-gray-400 text-sm;
+}
+
+/**************************************************
+ * BUTTON STANDARDS
+ **************************************************/
+
+/* Primary form button */
+.form-button-primary {
+    @apply w-full inline-flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-conservation-600 hover:bg-conservation-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-conservation-500 transition-all duration-200 transform hover:scale-105;
+}
+
+/* Secondary form button */
+.form-button-secondary {
+    @apply w-full inline-flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-conservation-500 transition-all duration-200;
+}
+
+/**************************************************
+ * FORM LAYOUT STANDARDS
+ **************************************************/
+
+/* Form container */
+.form-container {
+    @apply bg-white py-8 px-6 shadow-lg rounded-lg sm:px-10 border border-gray-200;
+}
+
+/* Form section */
+.form-section {
+    @apply space-y-6;
+}
+
+/* Form subsection */
+.form-subsection {
+    @apply bg-gray-50 p-4 rounded-lg space-y-4;
+}
+
+/* Form actions area */
+.form-actions {
+    @apply pt-4;
+}
+
+/**************************************************
+ * RESPONSIVE BREAKPOINTS
+ **************************************************/
+
+/* Mobile adjustments */
+@media (max-width: 640px) {
+    .form-input-icon-text,
+    .form-input-icon-only,
+    .form-input-standard,
+    .form-textarea,
+    .form-select,
+    .form-select-standard {
+        @apply text-base; /* Prevents zoom on iOS */
+    }
+}
+
+/**************************************************
+ * ACCESSIBILITY STANDARDS
+ **************************************************/
+
+/* Focus visible states */
+.form-input-icon-text:focus-visible,
+.form-input-icon-only:focus-visible,
+.form-input-standard:focus-visible,
+.form-textarea:focus-visible,
+.form-select:focus-visible,
+.form-select-standard:focus-visible {
+    @apply outline-none ring-2 ring-conservation-500 ring-offset-2;
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+    .form-input-icon-text,
+    .form-input-icon-only,
+    .form-input-standard,
+    .form-textarea,
+    .form-select,
+    .form-select-standard {
+        @apply border-gray-900;
+    }
+}
+
+/**************************************************
+ * ANIMATION STANDARDS
+ **************************************************/
+
+/* Smooth transitions for interactive elements */
+.form-input-icon-text,
+.form-input-icon-only,
+.form-input-standard,
+.form-textarea,
+.form-select,
+.form-select-standard {
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+/* Icon group transition for focus states */
+.form-icon-group,
+.form-icon-only {
+    transition: opacity 0.2s ease-in-out;
+}
+
+/**************************************************
+ * VALIDATION STATES
+ **************************************************/
+
+/* Valid state */
+.form-input-valid {
+    @apply border-green-500 focus:ring-green-500 focus:border-green-500;
+}
+
+/* Invalid state */
+.form-input-invalid {
+    @apply border-red-500 focus:ring-red-500 focus:border-red-500;
+}
+
+/* Disabled state */
+.form-input-disabled {
+    @apply bg-gray-100 text-gray-500 cursor-not-allowed;
+}
+
+/**************************************************
+ * USAGE EXAMPLES
+ *
+ * Text input with icon and helper text:
+ * <input type="text" class="form-input-icon-text" />
+ *
+ * Select dropdown:
+ * <select class="form-select">
+ *     <option>Option 1</option>
+ * </select>
+ *
+ * Standard input without icons:
+ * <input type="text" class="form-input-standard" />
+ *
+ * Textarea:
+ * <textarea class="form-textarea"></textarea>
+ **************************************************/

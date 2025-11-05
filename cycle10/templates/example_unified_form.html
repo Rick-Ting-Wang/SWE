@@ -1,0 +1,322 @@
+{#
+  Example: Unified Form System Implementation
+
+  This template demonstrates how to use the new unified spacing system
+  with both CSS classes and Jinja2 macros for consistent form elements.
+#}
+
+{% from 'macros/form_macros.html' import
+    form_input_icon_text, form_input_icon_only, form_input_standard,
+    form_textarea, form_select, form_checkbox, form_number,
+    form_button_primary, form_button_secondary,
+    form_container, form_section, form_subsection, form_actions,
+    icon_user, icon_email, icon_password, icon_organization,
+    icon_course, icon_content, icon_upload, icon_back, icon_add,
+    form_javascript %}
+
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Form Example - Komodo Hub</title>
+
+    <!-- UnoCSS Framework -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uno.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/uno-components.css') }}">
+
+    <!-- Unified Form System -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/form-system.css') }}">
+</head>
+<body class="h-full bg-gradient-to-br from-conservation-50 via-earth-50 to-komodo-50 font-sans antialiased">
+    <!-- Page Container -->
+    <div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+
+        <!-- Header Section -->
+        <div class="sm:mx-auto sm:w-full sm:max-w-lg text-center mb-8">
+            <div class="inline-flex items-center justify-center w-16 h-16 bg-conservation-600 rounded-full mb-4">
+                <span class="text-2xl">📝</span>
+            </div>
+            <h1 class="text-3xl font-bold text-conservation-800 mb-2">
+                Unified Form Example
+            </h1>
+            <p class="text-gray-600">
+                Demonstrating consistent spacing and styling
+            </p>
+        </div>
+
+        <!-- Form Container -->
+        <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-lg">
+            <div class="form-container">
+
+                <!-- Navigation -->
+                <div class="mb-6">
+                    <a href="{{ url_for('main_menu') }}" class="inline-flex items-center text-conservation-600 hover:text-conservation-700 font-medium transition-colors duration-200">
+                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            {{ icon_back() }}
+                        </svg>
+                        Back to Menu
+                    </a>
+                </div>
+
+                <!-- Example Form Using Macros -->
+                <form method="post" class="space-y-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Registration Form (Using Macros)</h2>
+
+                    {{ form_input_icon_text('username', 'Username',
+                        icon=icon_user(),
+                        helper_text='Choose username',
+                        required=true) }}
+
+                    {{ form_input_icon_text('email', 'Email Address',
+                        type='email',
+                        icon=icon_email(),
+                        helper_text='Enter email address',
+                        required=true) }}
+
+                    {{ form_input_icon_only('password', 'Password',
+                        type='password',
+                        icon=icon_password(),
+                        required=true) }}
+
+                    {{ form_select('user_type', 'User Type',
+                        options=[
+                            {'value': 'student', 'label': '🎓 Student'},
+                            {'value': 'teacher', 'label': '📚 Teacher'},
+                            {'value': 'community_member', 'label': '🏘️ Community Member'}
+                        ],
+                        required=true,
+                        helper_text='Select your role in the platform') }}
+
+                    {{ form_textarea('bio', 'Biography',
+                        placeholder='Tell us about yourself...',
+                        rows=4,
+                        helper_text='This helps others know you better') }}
+
+                    {{ form_number('age', 'Age',
+                        min=5, max=120, value=18,
+                        helper_text='Must be 5-120 years old') }}
+
+                    {{ form_checkbox('newsletter',
+                        'Subscribe to newsletter',
+                        helper_text='Receive updates about conservation efforts') }}
+
+                    {{ form_actions(form_button_primary("Create Account", icon=icon_add())) }}
+                </form>
+
+                <hr class="my-8">
+
+                <!-- Example Form Using CSS Classes Directly -->
+                <form method="post" class="space-y-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Organization Form (Using CSS Classes)</h2>
+
+                    <!-- Organization Name -->
+                    <div class="form-field">
+                        <label for="org_name" class="form-label-required">Organization Name</label>
+                        <div class="relative">
+                            <div class="form-icon-group" id="org-name-icon-group">
+                                <div class="flex items-center">
+                                    <svg class="form-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        {{ icon_organization() }}
+                                    </svg>
+                                    <span class="form-icon-text">Enter organization name</span>
+                                </div>
+                            </div>
+                            <input
+                                type="text"
+                                name="org_name"
+                                id="org_name"
+                                required
+                                class="form-input-icon-text"
+                                placeholder=""
+                                onfocus="hideIconGroup('org-name-icon-group')"
+                                onblur="showIconGroup('org-name-icon-group', this.value)"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Organization Type -->
+                    <div class="form-field">
+                        <label for="org_type" class="form-label-required">Organization Type</label>
+                        <select name="org_type" id="org_type" required class="form-select">
+                            <option value="school">🏫 School</option>
+                            <option value="community">🏘️ Community</option>
+                        </select>
+                        <p class="form-help-text">Schools focus on education, communities on local conservation efforts</p>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="form-field-with-help">
+                        <label for="description" class="form-label">Description (Optional)</label>
+                        <textarea
+                            name="description"
+                            id="description"
+                            rows="4"
+                            class="form-textarea"
+                            placeholder="Describe your organization's mission, goals, and activities..."
+                        ></textarea>
+                        <p class="form-help-text">Help others understand your organization's purpose and activities</p>
+                    </div>
+
+                    <!-- Privacy Settings -->
+                    <div class="form-subsection">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">Privacy Settings</h3>
+
+                        {{ form_checkbox('is_public',
+                            'Make organization public',
+                            checked=true,
+                            helper_text='Public organizations can be discovered and joined by other users') }}
+                    </div>
+
+                    <!-- Additional Options -->
+                    <div class="form-subsection">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">Additional Options</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="form-field">
+                                <label for="max_members" class="form-label">Max Members</label>
+                                <input
+                                    type="number"
+                                    name="max_members"
+                                    id="max_members"
+                                    min="1"
+                                    max="1000"
+                                    value="50"
+                                    class="form-input-standard"
+                                >
+                            </div>
+                            <div class="form-field">
+                                <label for="founded_year" class="form-label">Founded Year</label>
+                                <input
+                                    type="number"
+                                    name="founded_year"
+                                    id="founded_year"
+                                    min="1900"
+                                    max="2024"
+                                    value="2020"
+                                    class="form-input-standard"
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <div class="flex space-x-4">
+                            <button type="submit" class="form-button-primary">
+                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    {{ icon_add() }}
+                                </svg>
+                                Create Organization
+                            </button>
+                            <button type="button" class="form-button-secondary">Cancel
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <hr class="my-8">
+
+                <!-- Content Upload Form -->
+                <form method="post" class="space-y-6">
+                    <h2 class="text-xl font-semibold text-gray-900 mb-4">Content Upload (Mixed Approach)</h2>
+
+                    <!-- Title -->
+                    <div class="form-field">
+                        <label for="title" class="form-label-required">Title</label>
+                        <div class="relative">
+                            <div class="form-icon-group" id="title-icon-group">
+                                <div class="flex items-center">
+                                    <svg class="form-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        {{ icon_content() }}
+                                    </svg>
+                                    <span class="form-icon-text">Enter content title</span>
+                                </div>
+                            </div>
+                            <input
+                                type="text"
+                                name="title"
+                                id="title"
+                                required
+                                class="form-input-icon-text"
+                                placeholder=""
+                                onfocus="hideIconGroup('title-icon-group')"
+                                onblur="showIconGroup('title-icon-group', this.value)"
+                            >
+                        </div>
+                    </div>
+
+                    <!-- Content Type -->
+                    <div class="form-field">
+                        <label for="content_type" class="form-label-required">Content Type</label>
+                        <select name="content_type" id="content_type" required class="form-select">
+                            <option value="article">📄 Article</option>
+                            <option value="video">🎥 Video</option>
+                            <option value="image">🖼️ Image</option>
+                            <option value="document">📎 Document</option>
+                        </select>
+                        <p class="form-help-text">Choose the type of content you're uploading</p>
+                    </div>
+
+                    <!-- Content -->
+                    <div class="form-field-with-help">
+                        <label for="content" class="form-label-required">Content</label>
+                        <textarea
+                            name="content"
+                            id="content"
+                            rows="6"
+                            class="form-textarea"
+                            placeholder="Write your educational content, article, or information..."
+                        ></textarea>
+                        <p class="form-help-text">Write your educational content, article, or information</p>
+                    </div>
+
+                    <!-- Visibility Settings -->
+                    <div class="form-subsection">
+                        <h3 class="text-sm font-medium text-gray-900 mb-3">Visibility Settings</h3>
+
+                        {{ form_checkbox('is_public',
+                            'Make content public',
+                            checked=true,
+                            helper_text='Public content can be viewed by all users') }}
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="form-button-primary">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                {{ icon_upload() }}
+                            </svg>
+                            Upload Content
+                        </button>
+                    </div>
+                </form>
+
+                <!-- Additional Information -->
+                <div class="mt-6 bg-conservation-50 border-l-4 border-conservation-400 p-4 rounded-md">
+                    <div class="flex">
+                        <div class="flex-shrink-0">
+                            <svg class="h-5 w-5 text-conservation-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                        <div class="ml-3">
+                            <p class="text-sm text-conservation-700">
+                                <strong>Unified Design System:</strong> This form demonstrates consistent spacing,
+                                typography, and interactive elements using our new form system. All input fields,
+                                buttons, and form elements maintain perfect alignment and responsive behavior.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0">
+        <div class="absolute -top-40 -right-32 w-80 h-80 bg-conservation-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse"></div>
+        <div class="absolute -bottom-40 -left-32 w-80 h-80 bg-earth-200 rounded-full mix-blend-multiply filter blur-xl opacity-30 animate-pulse animation-delay-2000"></div>
+    </div>
+
+    <!-- JavaScript for form interactions -->
+    {{ form_javascript() }}
+</body>
+</html>

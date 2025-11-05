@@ -1,0 +1,942 @@
+# Komodo Hub User Types & Database Design Analysis
+
+**author**: Rick Ting Wang(14553505)
+
+
+## User Types & Functions
+
+### 1. **System Administrator (Superuser)**
+**Representative:** Asnawi (Yayasan Komodo account developer)
+
+**Functions:**
+- Manage overall system operations
+- Register schools and communities
+- Manage organization accounts
+- Interact with subscribers via email
+- Generate business dashboards
+- Monitor system-wide activities
+
+**Database Mapping:**
+- `users` table (user_type = 'admin')
+- `organizations` table (registration management)
+- `business_analytics` table (dashboard data)
+- `access_logs` table (activity monitoring)
+
+---
+
+### 2. **Project Director / Management**
+**Representative:** Tegar Prayudi
+
+**Functions:**
+- Access business analytics dashboards
+- Retrieve subscription data
+- Monitor user behavior and demographics
+- Track service availability and popularity
+- Make strategic decisions based on data
+
+**Database Mapping:**
+- `users` table (management permissions)
+- `business_analytics` table (analytics data)
+- `organizations` table (subscription statistics)
+- `access_logs` table (user behavior data)
+
+---
+
+### 3. **Principal**
+**Representative:** Khairunnisa
+
+**Functions:**
+- Subscribe to plans
+- Manage school profile
+- Oversee teacher and student registration
+- Generate and distribute unique student access codes
+- Control privacy settings (public vs. internal)
+- Access advanced data for teachers and students
+- Manage school library visibility
+
+**Database Mapping:**
+- `users` table (user_type = 'principal')
+- `organizations` table (school profile, subscription status)
+- `organization_members` table (access code generation)
+- `content_library` table (manage library visibility)
+
+---
+
+### 4. **School Administrator**
+**Representative:** Ayu Lestari
+
+**Functions:**
+- Handle subscription management
+- Handle account registration
+- Manage student admissions
+- Execute management tasks authorized by the principal
+
+**Database Mapping:**
+- `users` table (user_type = 'school_admin')
+- `organizations` table (subscription management)
+- `organization_members` table (registration and admissions)
+
+---
+
+### 5. **Teacher**
+**Representative:** Bintang Akbar
+
+**Functions:**
+- Manage assigned classes
+- Develop and publish course syllabus
+- Create and manage content/activities
+- Admit students into classes
+- Assess student progress
+- Generate student progress reports
+- Send emails to students
+- Send direct messages to students
+- Leave notes on student work/submissions
+- View student activities and contributions
+- Access Komodo Hub library learning materials
+
+**Database Mapping:**
+- `users` table (user_type = 'teacher')
+- `classes` table (class management)
+- `class_enrollments` table (student admissions)
+- `activities` table (create activities)
+- `assessments` table (assessment)
+- `messages` table (direct messaging)
+- `notes` table (leave notes)
+- `content_library` table (material access)
+
+---
+
+### 6. **Student**
+
+**Functions:**
+- Personalized account (avatar, color scheme)
+- View registered programs
+- Access learning materials
+- Participate in activities (in-class and outdoor)
+- Submit assignments and reports
+- Report endangered species sightings
+- Share content
+- Message teachers
+- Reply to teacher notes
+- Upload works to the school library
+- Create creative canvas (portfolio)
+
+**Database Mapping:**
+- `users` table (user_type = 'student')
+- `user_profiles` table (personalization, is_public = false)
+- `organization_members` table (access code)
+- `class_enrollments` table (class registration)
+- `program_enrollments` table (program registration)
+- `submissions` table (assignment submission)
+- `species_sightings` table (sighting report)
+- `content_library` table (upload works)
+- `creative_canvas` table (portfolio)
+- `messages` table (communicate with teacher)
+
+---
+
+### 7. **Community Chair**
+**Representative:** Besoeki Rachmat
+
+**Functions:**
+- Subscribe community to plans
+- Register community members
+- Manage community profile and library
+- Contribute articles, essays, columns
+- Report species sightings
+- View member contributions
+
+**Database Mapping:**
+- `users` table (user_type = 'community_chair')
+- `organizations` table (org_type = 'community')
+- `organization_members` table (member registration)
+- `content_library` table (contribution, is_public = true)
+- `species_sightings` table (sighting report)
+
+---
+
+### 8. **Community Member**
+
+**Functions:**
+- Create and manage profile (publicly visible)
+- Contribute to conservation projects
+- Submit articles and reports
+- Report species sightings
+- Share content to community library
+
+**Database Mapping:**
+- `users` table (user_type = 'community_member')
+- `user_profiles` table (is_public = true)
+- `organization_members` table (community affiliation)
+- `content_library` table (contribution, is_public = true)
+- `species_sightings` table (reporting)
+
+---
+
+### 9. **Security Compliance Officer**
+**Representative:** Bhaskara
+
+**Functions:**
+- Monitor security compliance
+- Audit system security measures
+- Ensure data protection standards
+- Assess certifications and access control
+
+**Database Mapping:**
+- `users` table (high-level permissions)
+- `access_logs` table (audit trail)
+- All tables (audit permissions)
+
+---
+
+### 10. **General Public (Unregistered User)**
+
+**Functions:**
+- Browse Komodo Hub knowledge base
+- View community library and member profiles
+- View school libraries (but not student profiles)
+- Access educational content about endangered species
+
+**Database Mapping:**
+- `content_library` table (is_public = true)
+- `user_profiles` table (community members only, is_public = true)
+- `organizations` table (is_public = true only)
+
+---
+
+## Database Design
+
+### **Core Table Structures**
+
+#### **1. Users Table**
+```sql
+CREATE TABLE users (
+    user_id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    user_type ENUM('admin', 'principal', 'school_admin', 'teacher', 
+                   'student', 'community_chair', 'community_member', 'public') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL,
+    INDEX idx_user_type (user_type),
+    INDEX idx_email (email)
+);
+```
+
+**Purpose:** 
+- Core table for all user types
+- Authentication & authorization
+- User type distinction
+
+---
+
+#### **2. Organizations Table - organization**
+```sql
+CREATE TABLE organizations (
+    org_id INT PRIMARY KEY AUTO_INCREMENT,
+    org_type ENUM('school', 'community') NOT NULL,
+    org_name VARCHAR(200) NOT NULL,
+    org_profile TEXT,
+    is_public BOOLEAN DEFAULT TRUE,
+    subscription_status ENUM('active', 'inactive', 'pending') DEFAULT 'pending',
+    subscription_date DATE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_org_type (org_type),
+    INDEX idx_subscription_status (subscription_status)
+);
+```
+
+**用途:**
+- Principals manage school profile
+- Community chairs manage community profile
+- Subscription management
+- Privacy control (school vs community)
+
+
+---
+
+#### **3. Organization_Members Table **
+```sql
+CREATE TABLE organization_members (
+    membership_id INT PRIMARY KEY AUTO_INCREMENT,
+    org_id INT NOT NULL,
+    user_id INT NOT NULL,
+    role ENUM('principal', 'admin', 'teacher', 'student', 'chairman', 'member') NOT NULL,
+    access_code VARCHAR(50) UNIQUE,  -- for students only
+    joined_date DATE NOT NULL,
+    FOREIGN KEY (org_id) REFERENCES organizations(org_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_org_user (org_id, user_id),
+    INDEX idx_role (role)
+);
+```
+
+**Purpose:**
+- Link users to organizations
+- Role management
+- Student access code generation and verification
+- Permission control
+
+---
+
+#### **4. Classes Table - classes**
+```sql
+CREATE TABLE classes (
+    class_id INT PRIMARY KEY AUTO_INCREMENT,
+    org_id INT NOT NULL,
+    teacher_id INT NOT NULL,
+    class_name VARCHAR(100) NOT NULL,
+    syllabus TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (org_id) REFERENCES organizations(org_id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_teacher (teacher_id)
+);
+```
+
+**Purpose:**
+- Teachers create/manage classes
+- Syllabus management
+- Class organization
+
+---
+
+#### **5. Class_Enrollments Table **
+```sql
+CREATE TABLE class_enrollments (
+    enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    class_id INT NOT NULL,
+    student_id INT NOT NULL,
+    enrollment_date DATE NOT NULL,
+    status ENUM('active', 'inactive') DEFAULT 'active',
+    FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_class_student (class_id, student_id),
+    INDEX idx_student (student_id)
+);
+```
+
+**Purpose:**
+- Teachers admit students into classes
+- Students view their enrolled classes
+- Access control (only assigned teacher can view student data)
+
+
+---
+
+#### **6. Programs Table - Conservation Programs**
+```sql
+CREATE TABLE programs (
+    program_id INT PRIMARY KEY AUTO_INCREMENT,
+    program_name VARCHAR(200) NOT NULL,
+    description TEXT,
+    program_type ENUM('internal', 'local', 'regional', 'national') NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_program_type (program_type)
+);
+```
+
+**purpose:**
+- Protection projects offered by Komodo Hub
+- Project categorization
+- Projects for teachers and students to choose and participate in
+
+---
+
+#### **7. Program_Enrollments Table - Program Enrollments**
+```sql
+CREATE TABLE program_enrollments (
+    enrollment_id INT PRIMARY KEY AUTO_INCREMENT,
+    program_id INT NOT NULL,
+    user_id INT,  -- Individual user
+    org_id INT,   -- Or organization
+    enrollment_date DATE NOT NULL,
+    status ENUM('active', 'completed', 'dropped') DEFAULT 'active',
+    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (org_id) REFERENCES organizations(org_id) ON DELETE CASCADE,
+    CHECK (user_id IS NOT NULL OR org_id IS NOT NULL),
+    INDEX idx_program (program_id),
+    INDEX idx_user (user_id),
+    INDEX idx_org (org_id)
+);
+```
+
+**用途:**
+- Students view enrolled projects
+- Organization (school/community) project participation
+- Project tracking
+
+
+---
+
+#### **8. Activities Table - Activities**
+```sql
+CREATE TABLE activities (
+    activity_id INT PRIMARY KEY AUTO_INCREMENT,
+    program_id INT NOT NULL,
+    class_id INT,  -- Teacher-created specific class activity
+    activity_name VARCHAR(200) NOT NULL,
+    activity_type ENUM('in-class', 'outdoor', 'challenge', 'game', 'assessment') NOT NULL,
+    description TEXT,
+    created_by INT NOT NULL,  -- Creator (teacher or admin)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE CASCADE,
+    FOREIGN KEY (class_id) REFERENCES classes(class_id) ON DELETE CASCADE,
+    FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_program (program_id),
+    INDEX idx_class (class_id)
+);
+```
+
+**Purpose:**
+- Teachers create classroom and outdoor activities
+- Students find and perform activities
+- Activity management
+
+---
+
+#### **9. Content_Library Table - Content Library**
+```sql
+CREATE TABLE content_library (
+    content_id INT PRIMARY KEY AUTO_INCREMENT,
+    title VARCHAR(300) NOT NULL,
+    content_type ENUM('article', 'essay', 'report', 'sighting', 'photo',
+                     'video', 'educational_material') NOT NULL,
+    content_data TEXT,  -- Text content or file path
+    created_by INT NOT NULL,
+    org_id INT,  -- Organization library
+    is_public BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (created_by) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (org_id) REFERENCES organizations(org_id) ON DELETE CASCADE,
+    INDEX idx_content_type (content_type),
+    INDEX idx_org (org_id),
+    INDEX idx_public (is_public)
+);
+```
+
+**Purpose:**
+- Students upload work to school library
+- Community members contribute articles
+- Teachers access learning materials
+- Public browses knowledge base
+- Privacy control (school is_public = false for students, true for library)
+
+---
+
+#### **10. Species_Sightings Table - Species Sightings**
+```sql
+CREATE TABLE species_sightings (
+    sighting_id INT PRIMARY KEY AUTO_INCREMENT,
+    species_name VARCHAR(100) NOT NULL,
+    location VARCHAR(200) NOT NULL,
+    date_time DATETIME NOT NULL,
+    description TEXT,
+    photo_path VARCHAR(500),
+    reported_by INT NOT NULL,
+    verified BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (reported_by) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_species (species_name),
+    INDEX idx_reporter (reported_by),
+    INDEX idx_verified (verified)
+);
+```
+
+**Purpose:**
+- Students report endangered species sightings
+- Community members contribute sighting data
+- Teachers leave notes on sightings
+- Conservation data collection
+
+---
+
+#### **11. Submissions Table - Submissions**
+```sql
+CREATE TABLE submissions (
+    submission_id INT PRIMARY KEY AUTO_INCREMENT,
+    activity_id INT NOT NULL,
+    student_id INT NOT NULL,
+    submission_data TEXT,
+    submission_file_path VARCHAR(500),
+    submission_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status ENUM('submitted', 'graded', 'returned') DEFAULT 'submitted',
+    FOREIGN KEY (activity_id) REFERENCES activities(activity_id) ON DELETE CASCADE,
+    FOREIGN KEY (student_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_activity (activity_id),
+    INDEX idx_student (student_id),
+    INDEX idx_status (status)
+);
+```
+
+**Purpose:**
+- Students submit work
+- Teachers view student submissions
+- Assignment tracking
+
+---
+
+#### **12. Assessments Table - Assessments**
+```sql
+CREATE TABLE assessments (
+    assessment_id INT PRIMARY KEY AUTO_INCREMENT,
+    submission_id INT NOT NULL,
+    teacher_id INT NOT NULL,
+    grade VARCHAR(10),
+    feedback TEXT,
+    assessed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (submission_id) REFERENCES submissions(submission_id) ON DELETE CASCADE,
+    FOREIGN KEY (teacher_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_submission (submission_id),
+    INDEX idx_teacher (teacher_id)
+);
+```
+
+**Purpose:**
+- Teachers assess students
+- Generate student progress reports
+- Feedback management
+
+---
+
+#### **13. Messages Table**
+```sql
+CREATE TABLE messages (
+    message_id INT PRIMARY KEY AUTO_INCREMENT,
+    sender_id INT NOT NULL,
+    recipient_id INT NOT NULL,
+    message_text TEXT NOT NULL,
+    sent_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    read_at TIMESTAMP NULL,
+    FOREIGN KEY (sender_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (recipient_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_sender (sender_id),
+    INDEX idx_recipient (recipient_id),
+    INDEX idx_read (read_at)
+);
+```
+
+**Purpose:**
+- Direct messages between teachers and students
+- Internal communication (school admin, teachers, students)
+- Excludes external stakeholders (other platforms exist)
+
+---
+
+#### **14. Notes Table**
+```sql
+CREATE TABLE notes (
+    note_id INT PRIMARY KEY AUTO_INCREMENT,
+    teacher_id INT NOT NULL,
+    target_type ENUM('submission', 'content', 'sighting') NOT NULL,
+    target_id INT NOT NULL,  -- submission_id, content_id, or sighting_id
+    note_text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (teacher_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    INDEX idx_teacher (teacher_id),
+    INDEX idx_target (target_type, target_id)
+);
+```
+
+**Purpose:**
+- Teachers leave notes on student work
+- Teachers leave notes on sighting reports
+- Teacher comments and guidance
+
+---
+
+#### **15. User_Profiles Table**
+```sql
+CREATE TABLE user_profiles (
+    profile_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    avatar_path VARCHAR(500),
+    color_scheme VARCHAR(50),
+    bio TEXT,
+    is_public BOOLEAN DEFAULT TRUE,  -- FALSE for students
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    UNIQUE KEY unique_user (user_id),
+    INDEX idx_public (is_public)
+);
+```
+
+**Purpose:**
+- Student personalization (avatar, color scheme)
+- Public profiles for community members
+- Privacy protection (student profiles are not public)
+- Curated digital library only (to prevent inappropriate content)
+
+---
+
+#### **16. Creative_Canvas Table - Creative Canvas**
+```sql
+CREATE TABLE creative_canvas (
+    canvas_id INT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT NOT NULL,
+    program_id INT NOT NULL,
+    assets JSON,  -- Compiled materials and assets
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (program_id) REFERENCES programs(program_id) ON DELETE CASCADE,
+    INDEX idx_user (user_id),
+    INDEX idx_program (program_id)
+);
+```
+
+**Usage:**
+- Student self-assessment contributions
+- Portfolio creation
+- Capture unique experiences
+- Showcase achievements
+
+---
+
+#### **17. Access_Logs able - Access Logs**
+```sql
+CREATE TABLE access_logs (
+    log_id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id INT,
+    action VARCHAR(200) NOT NULL,
+    target_type VARCHAR(50),
+    target_id INT,
+    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    ip_address VARCHAR(45),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE SET NULL,
+    INDEX idx_user (user_id),
+    INDEX idx_timestamp (timestamp),
+    INDEX idx_action (action)
+);
+```
+
+**Usage:**
+- Security audit
+- Monitor student data access
+- Compliance checks
+- Data protection (only assigned teachers can access)
+
+---
+
+#### **18. Business_Analytics Table - Business Analytics**
+```sql
+CREATE TABLE business_analytics (
+    analytics_id INT PRIMARY KEY AUTO_INCREMENT,
+    metric_type VARCHAR(100) NOT NULL,
+    metric_value DECIMAL(15,2),
+    metric_data JSON,  -- Additional detailed data
+    recorded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_metric_type (metric_type),
+    INDEX idx_recorded_at (recorded_at)
+);
+```
+
+**Usage:**
+- Management dashboard
+- Subscription data
+- User behavior analytics
+- Service availability tracking
+- Popular services identification
+- Strategic decision support
+
+---
+
+## Function and Database Mapping Diagram
+
+### **Teacher Feature Mapping**
+```
+Manage classes → classes, organization_members
+Create activities → activities
+Admit students → class_enrollments
+Assess students → assessments, submissions
+Send messages → messages
+Leave notes → notes
+Access materials → content_library
+Generate reports → assessments + class_enrollments (aggregate query)
+```
+
+### **Student Feature Mapping**
+```
+Personalized account → user_profiles
+View projects → program_enrollments
+Submit assignments → submissions
+Report sightings → species_sightings
+Upload works → content_library
+Create canvas → creative_canvas
+Message teachers → messages
+Reply to notes → messages (reply to notes)
+```
+
+### **Principal Feature Mapping**
+```
+Subscription → organizations (subscription_status)
+Generate access code → organization_members (access_code)
+Privacy control → organizations (is_public), user_profiles (is_public)
+Advanced data access → via organization_members + role permissions
+```
+
+### **System Admin Feature Mapping**
+```
+Register organizations → organizations
+Manage accounts → users, organization_members
+Business dashboard → business_analytics
+Monitor activities → access_logs
+```
+
+### **Community Feature Mapping**
+```
+Register members → organization_members
+Contribute content → content_library (is_public = true)
+Member profiles → user_profiles (is_public = true)
+Community library → content_library (org_id = community_id)
+```
+
+---
+
+## Key Database Relationships
+
+### **Many-to-Many Relationships**
+1. User ↔ Organization (via organization_members)
+2. Student ↔ Class (via class_enrollments)
+3. User/Organization ↔ Project (via program_enrollments)
+
+### **One-to-Many Relationships**
+1. Teacher → Class (classes.teacher_id)
+2. Class → Activity (activities.class_id)
+3. Activity → Submission (submissions.activity_id)
+4. User → Content (content_library.created_by)
+5. User → Sighting (species_sightings.reported_by)
+
+### **One-to-One Relationships**
+1. Submission → Assessment (assessments.submission_id UNIQUE)
+2. User → Profile (user_profiles.user_id UNIQUE)
+
+---
+
+## Key Security Considerations
+
+### **1. Row-Level Security**
+```sql
+-- Student profiles must be hidden from the public
+-- In user_profiles table:
+-- WHERE user_type = 'student' THEN is_public = FALSE
+
+-- Implementation example (application layer logic):
+SELECT * FROM user_profiles 
+WHERE is_public = TRUE OR user_id = [current_user_id];
+```
+
+### **2. Access Control**
+```sql
+-- Only assigned teachers can view student data in their classes
+-- Query example:
+SELECT s.* FROM submissions s
+JOIN class_enrollments ce ON s.student_id = ce.student_id
+JOIN classes c ON ce.class_id = c.class_id
+WHERE c.teacher_id = [current_teacher_id];
+```
+
+### **3. Organization Privacy**
+```sql
+-- School: public can only see the library, not student profiles
+-- Community: public can see both library and member profiles
+
+-- School library query (public):
+SELECT * FROM content_library 
+WHERE org_id = [school_id] AND is_public = TRUE;
+
+-- Community member query (public):
+SELECT u.*, up.* FROM users u
+JOIN user_profiles up ON u.user_id = up.user_id
+JOIN organization_members om ON u.user_id = om.user_id
+WHERE om.org_id = [community_id] AND up.is_public = TRUE;
+```
+
+### **4. Data Encryption**
+- Sensitive fields encrypted: password_hash, children's personal information
+- Transmission encryption: HTTPS/TLS
+- At-rest encryption: Database-level encryption
+
+### **5. Audit Trail**
+```sql
+-- All accesses to student data must be logged
+-- Trigger example:
+CREATE TRIGGER log_student_access
+AFTER SELECT ON submissions
+FOR EACH ROW
+BEGIN
+    INSERT INTO access_logs (user_id, action, target_type, target_id, timestamp)
+    VALUES (CURRENT_USER(), 'view_submission', 'submission', NEW.submission_id, NOW());
+END;
+```
+
+### **6. Authentication Methods**
+- Students: unique access code (organization_members.access_code)
+- Other users: username/password + multi-factor authentication (recommended)
+- Session management: users.last_login学生：唯一访问码 (`organization_members.access_code`)
+
+
+---
+
+## System Scalability Considerations
+
+### **Cloud Platform Architecture Recommendation**
+According to Tegar Prayudi's sustainability requirements:
+```
+Recommended platforms: AWS, Azure, Google Cloud Platform
+Service model: PaaS (Platform as a Service)
+
+Key services:
+- Compute: Auto-scaling containers (ECS, AKS, GKE)
+- Database: Managed relational database (RDS, Azure SQL, Cloud SQL)
+- Storage: Object storage (S3, Blob Storage, Cloud Storage)
+- CDN: Content delivery network (CloudFront, Azure CDN, Cloud CDN)
+- Load balancer: Automatic load balancer
+```
+
+### **Database Scaling Strategy**
+```
+1. Read-write separation: master-slave replication
+2. Sharding: shard by org_id (school/community)
+3. Caching layer: Redis/Memcached for frequent queries
+4. Archiving strategy: move old data to cold storage
+```
+
+---
+
+## ISO 9241-210:2019 Compliance Mapping
+
+### **Usability Principles**
+| Principle | Database Implementation |
+|------|-----------|
+| Easy to learn | Clear table structure, consistent naming convention |
+| Efficient | Optimized indexes, minimized join queries |
+| Fault tolerance | Constraints, triggers to prevent invalid data |
+
+### **Interactivity Principles**
+| Principle | Database Implementation |
+|------|-----------|
+| Visual presentation | `user_profiles` supports themes and color schemes |
+| Personalization | `creative_canvas` captures unique experiences |
+| Flexible activities | `activities` table supports multiple activity types |
+
+---
+
+## Example Queries
+
+### **1. Teacher views class student progress**
+```sql
+SELECT 
+    u.username AS student_name,
+    c.class_name,
+    a.activity_name,
+    s.submission_date,
+    ass.grade,
+    ass.feedback
+FROM users u
+JOIN class_enrollments ce ON u.user_id = ce.student_id
+JOIN classes c ON ce.class_id = c.class_id
+JOIN activities a ON c.class_id = a.class_id
+LEFT JOIN submissions s ON a.activity_id = s.activity_id AND s.student_id = u.user_id
+LEFT JOIN assessments ass ON s.submission_id = ass.submission_id
+WHERE c.teacher_id = [current_teacher_id]
+ORDER BY c.class_name, u.username, a.activity_name;
+```
+
+### **2. Public browses community library and members**
+```sql
+-- Community library
+SELECT 
+    cl.*,
+    u.username AS author
+FROM content_library cl
+JOIN users u ON cl.created_by = u.user_id
+WHERE cl.org_id = [community_id] AND cl.is_public = TRUE
+ORDER BY cl.created_at DESC;
+
+-- Community member profiles
+SELECT 
+    u.username,
+    up.bio,
+    up.avatar_path
+FROM users u
+JOIN user_profiles up ON u.user_id = up.user_id
+JOIN organization_members om ON u.user_id = om.user_id
+WHERE om.org_id = [community_id] AND up.is_public = TRUE;
+```
+
+### **3. Public browses school library (without student profiles)**
+```sql
+-- Only school library, no student personal info
+SELECT 
+    cl.title,
+    cl.content_type,
+    cl.content_data,
+    cl.created_at
+FROM content_library cl
+WHERE cl.org_id = [school_id] AND cl.is_public = TRUE
+ORDER BY cl.created_at DESC;
+
+-- Note: Creator info is excluded to protect student privacy
+```
+
+### **4. Student views personal creative canvas**
+```sql
+SELECT 
+    cc.*,
+    p.program_name
+FROM creative_canvas cc
+JOIN programs p ON cc.program_id = p.program_id
+WHERE cc.user_id = [current_student_id]
+ORDER BY cc.updated_at DESC;
+```
+
+### **5. Management dashboard data**
+```sql
+-- Subscription statistics
+SELECT 
+    org_type,
+    subscription_status,
+    COUNT(*) AS count
+FROM organizations
+GROUP BY org_type, subscription_status;
+
+-- User demographics
+SELECT 
+    user_type,
+    COUNT(*) AS total_users
+FROM users
+GROUP BY user_type;
+
+-- Popular programs
+SELECT 
+    p.program_name,
+    COUNT(pe.enrollment_id) AS enrollment_count
+FROM programs p
+LEFT JOIN program_enrollments pe ON p.program_id = pe.program_id
+WHERE pe.status = 'active'
+GROUP BY p.program_id
+ORDER BY enrollment_count DESC
+LIMIT 10;
+```
+
+---
+
+## Summary
+
+This database design supports all key features of Komodo Hub:
+
+✅ User Management: 10 user types, clear roles and permissions
+✅ Privacy Protection: Student data protection, public/private control
+✅ Educational Features: Classes, activities, submissions, assessments
+✅ Community Engagement: Community library, member contributions
+✅ Conservation Work: Species sighting reports, conservation programs
+✅ Security & Compliance: Access logs, audit trails, encryption
+✅ Scalability: Supports cloud deployment, auto-scaling
+✅ Business Intelligence: Analytics dashboard, strategic decision support
+
+This design follows ISO 9241-210:2019 principles, focusing on usability, interactivity, sustainability, and system security.

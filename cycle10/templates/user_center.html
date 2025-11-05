@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+
+{% block title %}User Center - Komodo Hub{% endblock %}
+
+{% block content %}
+<!-- Page Container -->
+<div class="min-h-full flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <!-- Header Section -->
+    <div class="sm:mx-auto sm:w-full sm:max-w-4xl">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-3xl font-bold text-conservation-800">User Center</h1>
+            <a href="{{ url_for('main_menu') }}" class="inline-flex items-center text-conservation-600 hover:text-conservation-700 font-medium transition-colors duration-200">
+                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+                </svg>
+                Back to Main Menu
+            </a>
+        </div>
+
+        <!-- Personal Information Section -->
+        <div class="bg-white shadow-lg rounded-lg border border-gray-200 p-6 sm:p-8 mb-8">
+            <h2 class="text-2xl font-bold text-conservation-700 mb-6">Personal Information</h2>
+
+            <!-- Avatar Section -->
+            <div class="text-center mb-8">
+                <div class="relative inline-block">
+                    <img src="{{ user.avatar_url }}" alt="User Avatar" class="w-32 h-32 sm:w-40 sm:h-40 lg:w-48 lg:h-48 rounded-full object-cover border-4 border-conservation-200 shadow-lg">
+                    <div class="absolute inset-0 rounded-full border-4 border-transparent hover:border-conservation-300 transition-colors duration-200"></div>
+                </div>
+                <p class="mt-4 text-sm text-gray-600">Avatar ID: {{ user.user_image }}</p>
+            </div>
+
+            <!-- User Info Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">Username:</span>
+                        <span class="text-gray-900 font-semibold">{{ user.username }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">Email:</span>
+                        <span class="text-gray-900">{{ user.email }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">User Type:</span>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-conservation-100 text-conservation-800">
+                            {{ user.user_type }}
+                        </span>
+                    </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">Registered:</span>
+                        <span class="text-gray-900">{{ user.created_at.strftime('%Y-%m-%d %H:%M') if user.created_at else 'Unknown' }}</span>
+                    </div>
+                    <div class="flex justify-between items-center py-3 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">Last Login:</span>
+                        <span class="text-gray-900">{{ user.last_login.strftime('%Y-%m-%d %H:%M') if user.last_login else 'Never' }}</span>
+                    </div>
+                    <div class="flex justify-between items-start py-3 border-b border-gray-100">
+                        <span class="font-medium text-gray-700">Bio:</span>
+                        <span class="text-gray-900 text-right max-w-xs">{{ user.bio or 'No bio provided' }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Messages Section -->
+        <div class="bg-white shadow-lg rounded-lg border border-gray-200 p-6 sm:p-8">
+            <h2 class="text-2xl font-bold text-conservation-700 mb-6">Received Messages</h2>
+
+            {% if received_messages %}
+                <div class="space-y-4">
+                    {% for msg in received_messages %}
+                        <div class="bg-earth-50 border-l-4 border-earth-400 p-4 rounded-r-lg hover:bg-earth-100 transition-colors duration-200">
+                            <div class="flex justify-between items-start mb-2">
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-semibold text-earth-800">{{ msg.sender_name }}</span>
+                                    <span class="text-xs text-earth-600 bg-earth-200 px-2 py-1 rounded">ID: {{ msg.sender_id }}</span>
+                                </div>
+                                <span class="text-sm text-earth-600">{{ msg.sent_at.strftime('%Y-%m-%d %H:%M') if msg.sent_at else 'Unknown' }}</span>
+                            </div>
+                            <p class="text-earth-700 mt-2">{{ msg.message_text }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="text-center py-8">
+                    <div class="inline-flex items-center justify-center w-16 h-16 bg-gray-100 rounded-full mb-4">
+                        <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                        </svg>
+                    </div>
+                    <p class="text-gray-500 text-lg">No messages received yet.</p>
+                    <p class="text-gray-400 text-sm mt-2">When someone sends you a message, it will appear here.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
